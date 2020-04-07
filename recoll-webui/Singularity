@@ -1,5 +1,6 @@
 Bootstrap: docker
-From: ubuntu:20.04
+From: ubuntu:19.10
+#####Could use ubuntu:20.04, but it doesn't have python-waitress yet.
 
 %labels
 MAINTAINER TRF

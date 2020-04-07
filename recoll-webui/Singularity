@@ -1,6 +1,9 @@
 Bootstrap: docker
 From: ubuntu:18.10
 
+%labels
+MAINTAINER TRF
+
 %files
 
 %environment

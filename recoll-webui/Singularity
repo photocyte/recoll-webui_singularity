@@ -9,10 +9,11 @@ MAINTAINER TRF
 %environment
     
 %post
-    sudo apt-get update -y
-    sudo apt-get install -y pwgen
-    sudo apt-get install -y recoll git
+    apt-get update -y
+    apt-get install -y pwgen
+    apt-get install -y recoll git
     git clone https://framagit.org/medoc92/recollwebui.git
     cd recollwebui; ./configure; make; sudo make install
+    cd ..
 %runscript
     exec "$@"

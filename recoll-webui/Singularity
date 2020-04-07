@@ -11,6 +11,12 @@ MAINTAINER TRF
 %post
     apt-get update
     apt-get install -y pwgen
-    apt-get install -y git recoll python3-recoll recollcmd recollgui
+    apt-get install -y git recoll python3-recoll recollcmd recollgui xvfb
+    git clone https://framagit.org/medoc92/recollwebui.git
+    cd recollwebui
+    ./configure
+    make
+    make install
+    cd ..
 %runscript
     exec "$@"

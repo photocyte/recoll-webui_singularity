@@ -11,6 +11,9 @@ MAINTAINER TRF
     
 %post
     apt-get update
+    apt-get install locales
+    locale-gen "en_US.UTF-8"
+    dpkg-reconfigure locales
     apt-get install -y pwgen
     apt-get install -y git recoll python3-recoll recollcmd recollgui xvfb python-waitress
     git clone https://framagit.org/medoc92/recollwebui.git

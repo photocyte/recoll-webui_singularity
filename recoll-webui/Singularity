@@ -1,6 +1,7 @@
 Bootstrap: docker
 From: ubuntu:19.10
 #####Could use ubuntu:20.04, but it doesn't have python-waitress yet.
+#####Also note, the newer that is used, the greater the chance of compatability problems w/ older kernels
 
 %labels
 MAINTAINER TRF
@@ -14,8 +15,17 @@ MAINTAINER TRF
     apt-get install locales
     locale-gen "en_US.UTF-8"
     dpkg-reconfigure locales
-    apt-get install -y pwgen
-    apt-get install -y git recoll python3-recoll recollcmd recollgui xvfb python-waitress
+    apt-get install -y pwgen git nginx
+    apt-get install -y recoll python3-recoll recollcmd recollgui xvfb python-waitress python-ujson
     git clone https://framagit.org/medoc92/recollwebui.git
+
+    ##Making some files for the basic authentication
+    mkdir nginx
+    HEXKEY=$(xxd -l 16 -p /dev/urandom)
+    htpasswd -b -B -c /nginx/nginx.pwd lab-user ${HEXKEY}
+    echo ${HEXKEY} > /nginx/hexkey.txt        
+    ###
+    
+    
 %runscript
     exec "$@"

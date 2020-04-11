@@ -29,23 +29,24 @@ MAINTAINER TRF
     ###Also put nginx.pid in a writable location.
     sed -i 's/\/var\/log\/nginx\/access.log/off/g' /etc/nginx/nginx.conf
     sed -i 's/\/var\/log\/nginx\/error.log/off/g' /etc/nginx/nginx.conf
-    sed -i "s/\/run\/nginx.pid/\/tmp\/${BUILDKEY}_recoll-singularity_nginx.pid" /etc/nginx/nginx.conf ##This doesn't play nice w/ multiple containers on the same machine
+    sed -i "s/\/run\/nginx.pid/\/tmp\/${BUILDKEY}_recoll-singularity_nginx.pid/g" /etc/nginx/nginx.conf ##This doesn't play nice w/ multiple containers on the same machine
     htpasswd -b -B -c "/tmp/${BUILDKEY}.nginx.pwd" ${BASICAUTHUSER} ${RUNKEY}
     
-    sed -i "s/include /etc/nginx/sites-enabled/*;\n}/include /etc/nginx/sites-enabled/*;\n\nserver { \
+    ##There must be an easier way to do this...
+    sed -i "s/include \/etc\/nginx\/sites-enabled/*;\n}/include \/etc\/nginx\/sites-enabled\/*;\n\nserver { \
       listen 13338; \
-      location / { \
-      root /dev/null; \
+      location \/ { \
+      root \/dev\/null; \
       } \
-      location /${BUILDKEY}/ { \
-      root /dev/null; \
+      location \/${BUILDKEY}\/ { \
+      root \/dev\/null; \
       auth_basic "Authorized users only"; \
-      auth_basic_user_file /tmp/${BUILDKEY}.nginx.pwd; \
-      proxy_pass http://127.0.0.1:4567/; \
+      auth_basic_user_file \/tmp\/${BUILDKEY}.nginx.pwd; \
+      proxy_pass http:\/\/127.0.0.1:4567\/; \
       proxy_intercept_errors on; \
       proxy_connect_timeout 8; \
       proxy_read_timeout 180; \
-      }\n}\n}" /etc/nginx/nginx.conf ##Add the reverse proxy configuration.
+      }\n}\n}/g" /etc/nginx/nginx.conf ##Add the reverse proxy configuration.
     
 %runscript
     #!/bin/bash

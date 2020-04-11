@@ -20,7 +20,9 @@ MAINTAINER TRF
     git clone https://framagit.org/medoc92/recollwebui.git
 
     ##Making some files for the basic authentication
-    BUILDKEY=$(xxd -l 16 -p /dev/urandom) ##This is only unique, for each time the container is built. Should do it as a runscript.
+    BASICAUTHUSER="recoll-user"
+    echo ${BASICAUTHUSER} > /user.txt
+    BUILDKEY=$(xxd -l 16 -p /dev/urandom) ##This is only unique, for each time the container is built.
     echo ${BUILDKEY} > /buildkey.txt
     
     ###Disable nginx logging, which doesn't play nice w/ the read-only filesystem.
@@ -28,19 +30,28 @@ MAINTAINER TRF
     sed -i 's/\/var\/log\/nginx\/access.log/off/g' /etc/nginx/nginx.conf
     sed -i 's/\/var\/log\/nginx\/error.log/off/g' /etc/nginx/nginx.conf
     sed -i "s/\/run\/nginx.pid/\/tmp\/${BUILDKEY}_recoll-singularity_nginx.pid" /etc/nginx/nginx.conf ##This doesn't play nice w/ multiple containers on the same machine
+    htpasswd -b -B -c "/tmp/${BUILDKEY}.nginx.pwd" ${BASICAUTHUSER} ${RUNKEY}
+    
+    sed -i "s/include /etc/nginx/sites-enabled/*;\n}/include /etc/nginx/sites-enabled/*;\n\nserver { \
+      listen 13338; \
+      location / { \
+      root /dev/null; \
+      } \
+      location /${BUILDKEY}/ { \
+      root /dev/null; \
+      auth_basic "Authorized users only"; \
+      auth_basic_user_file /tmp/${BUILDKEY}.nginx.pwd; \
+      proxy_pass http://127.0.0.1:4567/; \
+      proxy_intercept_errors on; \
+      proxy_connect_timeout 8; \
+      proxy_read_timeout 180; \
+      }\n}\n}" /etc/nginx/nginx.conf ##Add the reverse proxy configuration.
     
 %runscript
     #!/bin/bash
     BUILDKEY=`cat /buildkey.txt`
-    BASICAUTHUSER="recoll-user"
-    RUNKEY=$(xxd -l 16 -p /dev/urandom)
-    if [ ! -f "/tmp/${BUILDKEY}_${RUNKEY}.hexkey.txt" ]; then
-        echo ${HEXKEY} > "/tmp/${BUILDKEY}_${RUNKEY}.hexkey.txt"
-    fi
-    if [ ! -f "/tmp/${BUILDKEY}_${RUNKEY}.nginx.pwd" ]; then
-            htpasswd -b -B -c "/tmp/${BUILDKEY}_${RUNKEY}.nginx.pwd" ${BASICAUTHUSER} ${RUNKEY}
-    fi
+    BASICAUTHUSER=`cat /user.txt`
     echo "Basic authentication parameters:"
     echo "Username: ${BASICAUTHUSER}"
-    echo "Key: ${RUNKEY}"
+    echo "Key: ${BUILDKEY}"
 

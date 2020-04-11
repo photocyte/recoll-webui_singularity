@@ -20,10 +20,11 @@ MAINTAINER TRF
     git clone https://framagit.org/medoc92/recollwebui.git
 
     ##Making some files for the basic authentication
-    mkdir nginx
+    mkdir nginx_private ##Where the key and passwd files are stored
+    mkdir nginx_public ##Where the log files will be stored
     HEXKEY=$(xxd -l 16 -p /dev/urandom)
-    htpasswd -b -B -c /nginx/nginx.pwd lab-user ${HEXKEY}
-    echo ${HEXKEY} > /nginx/hexkey.txt        
+    htpasswd -b -B -c /nginx_private/nginx.pwd lab-user ${HEXKEY}
+    echo ${HEXKEY} > /nginx_private/hexkey.txt        
     ###
     
     

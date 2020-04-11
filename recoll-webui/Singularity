@@ -21,11 +21,13 @@ MAINTAINER TRF
 
     ##Making some files for the basic authentication
     mkdir nginx_private ##Where the key and passwd files are stored
-    mkdir nginx_public ##Where the log files will be stored
     HEXKEY=$(xxd -l 16 -p /dev/urandom)
     htpasswd -b -B -c /nginx_private/nginx.pwd lab-user ${HEXKEY}
     echo ${HEXKEY} > /nginx_private/hexkey.txt        
     ###
+    ###Disable nginx logging, which doesn't play nice w/ the read-only filesystem.
+    cat /etc/nginx/nginx.conf | sed 's/\/var\/log\/nginx\/access.log/off/g' | sed 's/\/var\/log\/nginx\/error.log/off/g' > tmp
+    mv tmp /etc/nginx/nginx.conf
     
     
 %runscript

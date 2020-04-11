@@ -33,7 +33,7 @@ MAINTAINER TRF
     htpasswd -b -B -c "/tmp/${BUILDKEY}.nginx.pwd" ${BASICAUTHUSER} ${BUILDKEY}
     
     ##There must be an easier way to do this...
-    sed -i "s/include \/etc\/nginx\/sites-enabled\/*;\n}\/include \/etc\/nginx\/sites-enabled\/*;\n\nserver { \
+    sed -i "s/include \/etc\/nginx\/sites-enabled\/*;\n}/include \/etc\/nginx\/sites-enabled\/*;\n\nserver { \
       listen 13338; \
       location \/ { \
       root \/dev\/null; \

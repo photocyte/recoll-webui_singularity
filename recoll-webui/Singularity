@@ -34,8 +34,8 @@ MAINTAINER TRF
     BUILDKEY=`cat /buildkey.txt`
     BASICAUTHUSER="recoll-user"
     RUNKEY=$(xxd -l 16 -p /dev/urandom)
-    if [ ! -f "/tmp/${BUILDKEY}_${RUNKEY}.hexkey.txt ]; then
-        echo ${HEXKEY} > "/tmp/${RUNKEY}.hexkey.txt"
+    if [ ! -f "/tmp/${BUILDKEY}_${RUNKEY}.hexkey.txt" ]; then
+        echo ${HEXKEY} > "/tmp/${BUILDKEY}_${RUNKEY}.hexkey.txt"
     fi
     if [ ! -f "/tmp/${BUILDKEY}_${RUNKEY}.nginx.pwd" ]; then
             htpasswd -b -B -c "/tmp/${BUILDKEY}_${RUNKEY}.nginx.pwd" ${BASICAUTHUSER} ${RUNKEY}

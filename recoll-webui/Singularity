@@ -34,20 +34,19 @@ MAINTAINER TRF
     
     ##Adding the reverse proxy configuration for nginx
     ##There must be an easier way to do this...
-    sed -i "s/include \/etc\/nginx\/sites-enabled\/*;/include \/etc\/nginx\/sites-enabled\/*;\n\nserver { \
-      listen 13338; \
-      location \/ { \
-      root \/dev\/null; \
-      } \
-      location \/${BUILDKEY}\/ { \
-      root \/dev\/null; \
-      auth_basic 'Authorized users only'; \
-      auth_basic_user_file \/tmp\/${BUILDKEY}.nginx.pwd; \
-      proxy_pass http:\/\/127.0.0.1:4567\/; \
-      proxy_intercept_errors on; \
-      proxy_connect_timeout 8; \
-      proxy_read_timeout 180; \
-      }\n}/g" /etc/nginx/nginx.conf ##Add the reverse proxy configuration.
+    sed -i "s/include \/etc\/nginx\/sites-enabled\/\*;/include \/etc\/nginx\/sites-enabled\/\*;\n\nserver { \n\
+      listen 13338; \n\
+      location \/ { \n\
+      root \/dev\/null; \n\
+      } \n\
+      location \/${BUILDKEY}\/ { \n\
+      root \/dev\/null; \n\
+      auth_basic 'Authorized users only'; \n\
+      auth_basic_user_file \/tmp\/${BUILDKEY}.nginx.pwd; \n\
+      proxy_pass http:\/\/127.0.0.1:4567\/; \n\
+      proxy_intercept_errors on; \n\
+      proxy_connect_timeout 8; \n\
+      proxy_read_timeout 180; \n\    }\n  }/g"  /etc/nginx/nginx.conf ##Add the reverse proxy configuration.
     
 %runscript
     #!/bin/bash

@@ -35,9 +35,9 @@ MAINTAINER TRF
     
     ###Disable nginx logging, which doesn't play nice w/ the read-only filesystem.
     ###Also put nginx.pid in a writable location.
-    sed -i 's/\/var\/log\/nginx\/access.log/\/dev\/null/g' /etc/nginx/nginx.conf
-    sed -i 's/\/var\/log\/nginx\/error.log/\/dev\/null/g' /etc/nginx/nginx.conf
-    sed -i "s/\/run\/nginx.pid/\/tmp\/${BUILDKEY}_recoll-singularity_nginx.pid/g" /etc/nginx/nginx.conf ##This doesn't play nice w/ multiple containers on the same machine
+    #sed -i 's/\/var\/log\/nginx\/access.log/\/dev\/null/g' /etc/nginx/nginx.conf
+    #sed -i 's/\/var\/log\/nginx\/error.log/\/dev\/null/g' /etc/nginx/nginx.conf
+    #sed -i "s/\/run\/nginx.pid/\/tmp\/${BUILDKEY}_recoll-singularity_nginx.pid/g" /etc/nginx/nginx.conf ##This doesn't play nice w/ multiple containers on the same machine
     htpasswd -b -B -c "/tmp/${BUILDKEY}.nginx.pwd" ${BASICAUTHUSER} ${BUILDKEY}
     
     ##Adding the reverse proxy configuration for nginx

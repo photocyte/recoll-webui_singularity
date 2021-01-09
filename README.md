@@ -1,6 +1,6 @@
 Singularity file for the recoll-webui.
 
-Image building handled by singularity-hub.org
+Image building handled by (https://singularity-hub.org)[singularity-hub.org]
 
 ### Usage
 
